@@ -44,6 +44,30 @@ const updateTask = asyncHandler(async (req, res) => {
     
 })
 
+const updateTaskStatus = asyncHandler(async (req, res) => {
+    const task = await Task.findById(req.params.id)
+
+
+        if(task.complete === false) {
+            task.complete = true
+
+            await task.save()
+
+            res.json({message: 'task completed!'})
+        } else if (task.complete === true) {
+            task.complete = false
+
+            await task.save()
+
+            res.json({message: 'task incomplete!'})
+        } else
+        {
+            res.status(404)
+            throw new Error('Task not found')
+        }
+    
+})
+
 const deleteTask = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.id)
 
@@ -60,4 +84,4 @@ const deleteTask = asyncHandler(async (req, res) => {
 
 
 
-export { createTask, updateTask, deleteTask }
+export { createTask, updateTask, updateTaskStatus, deleteTask }
