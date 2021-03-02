@@ -33,14 +33,36 @@ const createUser = asyncHandler(async (req, res) => {
     
 })
 
-// const updateTaskFollowing = asyncHandler(async (req, res) => {
-//     const task = await Task.findById(req.params.id)
-    
-//     if (task) {
+const updateTaskFollowing = asyncHandler(async (req, res) => {
+    const task = await Task.findById(req.params.id)
+    const user = await User.findById(req.body._id)
 
-//         const alreadyFollowing = task.followers.find(f.user._id)
-//     }
-// })
+    if(task){
+        const alreadyFollowing = user.following.find(f => f._id.toString() === req.params.id.toString())
+
+        if(alreadyFollowing){
+            user.following.pull(task)
+            await user.save()
+            res.status(201).json({message: 'user unfollowed'})
+            // res.status(400)
+            // throw new Error('already following')
+        } else {
+            user.following.push(task)
+
+            const userFollowing = await user.save()
+            res.status(201).json(userFollowing)
+        }
+
+        
+
+    } else {
+        res.status(404)
+        throw new Error('Task not found')
+    }
+
+    
+   
+})
 
 const completedTasks = asyncHandler(async (req, res) => {
     const task = await Task.find({complete: true, user: req.params.id})
@@ -64,4 +86,4 @@ const incompleteTasks = asyncHandler(async (req, res) => {
     }
 })
 
-export { createUser, completedTasks, incompleteTasks }
+export { createUser, completedTasks, incompleteTasks, updateTaskFollowing }

@@ -13,7 +13,6 @@ const userSchema = mongoose.Schema({
 
     following: [
         {
-            
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Task'
             
