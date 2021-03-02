@@ -3,21 +3,26 @@ import Task from '../models/taskModel.js'
 import User from '../models/userModel.js'
 
 const createTask = asyncHandler(async (req, res) => {
-    const { title, content } = req.body
-    const user = await User.findById(req.params.id)
-
+    const { title, content, user } = req.body
     
         const task = await Task.create({
             title,
             content,
-            user: req.params.id
-            
+            user
         })
-
-        user.tasks.push(task)
     
-        await user.save()
-        res.status(201).json({ message: 'Task Created'})
+        if(task){
+            res.status(201).json({
+                _id: task._id,
+                title: task.title,
+                content: task.content,
+                user: task.user,
+                followers: task.followers
+            })
+        } else {
+            res.status(400)
+            throw new Error('Invalid task input')
+        }
     
 })
 
@@ -39,6 +44,20 @@ const updateTask = asyncHandler(async (req, res) => {
     
 })
 
+const deleteTask = asyncHandler(async (req, res) => {
+    const task = await Task.findById(req.params.id)
 
 
-export { createTask, updateTask }
+        if(task) {
+           await task.remove()
+           res.json({ message: 'Task deleted'})
+        } else {
+            res.status(404)
+            throw new Error('Task not found')
+        }
+    
+})
+
+
+
+export { createTask, updateTask, deleteTask }
