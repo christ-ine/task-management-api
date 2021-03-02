@@ -34,22 +34,26 @@ const createUser = asyncHandler(async (req, res) => {
 })
 
 const updateTaskFollowing = asyncHandler(async (req, res) => {
-    const task = await Task.findById(req.params.id)
+    const task = await Task.findById(req.params.taskId)
     const user = await User.findById(req.body._id)
 
     if(task){
-        const alreadyFollowing = user.following.find(f => f._id.toString() === req.params.id.toString())
+        const alreadyFollowing = user.following.find(f => f._id.toString() === req.params.taskId.toString())
 
         if(alreadyFollowing){
             user.following.pull(task)
+            task.followers.pull(user)
 
             await user.save()
-            res.status(201).json({message: 'user unfollowed'})
+            await task.save()
+            res.status(201).json({message: 'task unfollowed'})
             // res.status(400)
             // throw new Error('already following')
         } else {
             user.following.push(task)
+            task.followers.push(user)
 
+            await task.save()
             const userFollowing = await user.save()
             res.status(201).json(userFollowing)
         }
@@ -101,4 +105,26 @@ const incompleteTasks = asyncHandler(async (req, res) => {
     }
 })
 
-export { createUser, completedTasks, incompleteTasks, updateTaskFollowing, followingList }
+const deleteUser = asyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id)
+    const task = await Task.find({user: req.params.id })
+    const taskFollower = await Task.find({followers: req.params.id})
+
+    if(user){
+
+        const followerArr = taskFollower.map(x => {
+            x.followers.pull(user)
+            x.save()
+        })
+        
+        // await followerArr.pull(user)
+        task.map(t => t.remove())
+        await user.remove()
+        res.status(201).json({message: 'user deleted'})
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
+})
+
+export { createUser, completedTasks, incompleteTasks, updateTaskFollowing, followingList, deleteUser }

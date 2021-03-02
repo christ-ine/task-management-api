@@ -82,15 +82,7 @@ const deleteTask = asyncHandler(async (req, res) => {
     
 })
 
-const completedTasks = asyncHandler(async (req, res) => {
-    const task = await task.find({})
-    const user = await User.findById(req.params.id)
 
-    if (task.completed === true && task.user === user) {
-
-        res.json(task)
-    }
-})
 
 
 
