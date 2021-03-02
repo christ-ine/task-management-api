@@ -35,8 +35,8 @@ const updateTask = asyncHandler(async (req, res) => {
 
 
         if(task) {
-            task.title = title
-            task.content = content
+            task.title = title || task.title
+            task.content = content || task.content
 
             const updatedTask = await task.save()
             res.json(updatedTask)
