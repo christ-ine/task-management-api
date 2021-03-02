@@ -6,6 +6,8 @@ import morgan from 'morgan'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middleware/errorMiddleware.js'
 
+import userRoutes from './routes/userRoutes.js'
+
 dotenv.config()
 
 connectDB()
@@ -17,6 +19,8 @@ if(process.env.NODE_ENV === 'development'){
 }
 
 app.use(express.json())
+
+app.use('/api/users', userRoutes)
 
 
 const __dirname = path.resolve()
