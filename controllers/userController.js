@@ -42,6 +42,7 @@ const updateTaskFollowing = asyncHandler(async (req, res) => {
 
         if(alreadyFollowing){
             user.following.pull(task)
+
             await user.save()
             res.status(201).json({message: 'user unfollowed'})
             // res.status(400)
@@ -59,9 +60,23 @@ const updateTaskFollowing = asyncHandler(async (req, res) => {
         res.status(404)
         throw new Error('Task not found')
     }
-
-    
    
+})
+
+const followingList = asyncHandler(async(req, res) => {
+    const user = await User.findById(req.params.id)
+
+    if(user){
+
+        if(user.following.length === 0){
+            res.status(201).json({message: 'Not following any tasks}'})
+        }
+
+        res.json(user.following)
+    } else {
+        res.status(404)
+        throw new Error('User not found')
+    }
 })
 
 const completedTasks = asyncHandler(async (req, res) => {
@@ -86,4 +101,4 @@ const incompleteTasks = asyncHandler(async (req, res) => {
     }
 })
 
-export { createUser, completedTasks, incompleteTasks, updateTaskFollowing }
+export { createUser, completedTasks, incompleteTasks, updateTaskFollowing, followingList }
