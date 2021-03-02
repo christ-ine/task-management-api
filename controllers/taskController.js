@@ -1,7 +1,8 @@
 import asyncHandler from 'express-async-handler'
 import Task from '../models/taskModel.js'
-import User from '../models/userModel.js'
 
+//@desc Create new task
+//@route POST /api/tasks/
 const createTask = asyncHandler(async (req, res) => {
     const { title, content, user } = req.body
     
@@ -26,6 +27,8 @@ const createTask = asyncHandler(async (req, res) => {
     
 })
 
+//@desc Edit task title and content
+//@route PUT /api/tasks/:id
 const updateTask = asyncHandler(async (req, res) => {
     const { title, content } = req.body
     const task = await Task.findById(req.params.id)
@@ -44,6 +47,8 @@ const updateTask = asyncHandler(async (req, res) => {
     
 })
 
+//@desc Mark task as complete or incomplete
+//@route PUT /api/tasks/:id/status
 const updateTaskStatus = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.id)
 
@@ -68,6 +73,8 @@ const updateTaskStatus = asyncHandler(async (req, res) => {
     
 })
 
+//@desc Delete task
+//@route DELETE /api/tasks/:id
 const deleteTask = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.id)
 
@@ -81,9 +88,6 @@ const deleteTask = asyncHandler(async (req, res) => {
         }
     
 })
-
-
-
 
 
 export { createTask, updateTask, updateTaskStatus, deleteTask }

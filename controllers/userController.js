@@ -3,7 +3,7 @@ import User from '../models/userModel.js'
 import Task from '../models/taskModel.js'
 
 //@desc Create a user
-//@route POST /api/users
+//@route POST /api/users/
 const createUser = asyncHandler(async (req, res) => {
     const { userName } = req.body
 
@@ -33,6 +33,8 @@ const createUser = asyncHandler(async (req, res) => {
     
 })
 
+//@desc Follow/unfollow tasks
+//@route PUT /api/users/:taskId/follow
 const updateTaskFollowing = asyncHandler(async (req, res) => {
     const task = await Task.findById(req.params.taskId)
     const user = await User.findById(req.body._id)
@@ -47,8 +49,7 @@ const updateTaskFollowing = asyncHandler(async (req, res) => {
             await user.save()
             await task.save()
             res.status(201).json({message: 'task unfollowed'})
-            // res.status(400)
-            // throw new Error('already following')
+            
         } else {
             user.following.push(task)
             task.followers.push(user)
@@ -67,6 +68,8 @@ const updateTaskFollowing = asyncHandler(async (req, res) => {
    
 })
 
+//@desc View user's following list
+//@route GET /api/users/:id/followlist
 const followingList = asyncHandler(async(req, res) => {
     const user = await User.findById(req.params.id)
 
@@ -83,6 +86,8 @@ const followingList = asyncHandler(async(req, res) => {
     }
 })
 
+//@desc View user's completed tasks
+//@route GET /api/users/:id/completed
 const completedTasks = asyncHandler(async (req, res) => {
     const task = await Task.find({complete: true, user: req.params.id})
 
@@ -94,6 +99,8 @@ const completedTasks = asyncHandler(async (req, res) => {
     }
 })
 
+//@desc View user's incomplete tasks
+//@route GET /api/users/:id/incomplete
 const incompleteTasks = asyncHandler(async (req, res) => {
     const task = await Task.find({complete: false, user: req.params.id})
 
@@ -105,6 +112,8 @@ const incompleteTasks = asyncHandler(async (req, res) => {
     }
 })
 
+//@desc Delete user, their tasks, and following list
+//@route DELETE /api/users/:id/deleteuser
 const deleteUser = asyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id)
     const task = await Task.find({user: req.params.id })
@@ -112,12 +121,11 @@ const deleteUser = asyncHandler(async (req, res) => {
 
     if(user){
 
-        const followerArr = taskFollower.map(x => {
+        taskFollower.map(x => {
             x.followers.pull(user)
             x.save()
         })
         
-        // await followerArr.pull(user)
         task.map(t => t.remove())
         await user.remove()
         res.status(201).json({message: 'user deleted'})
