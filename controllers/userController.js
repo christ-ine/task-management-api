@@ -1,5 +1,6 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/userModel.js'
+import Task from '../models/taskModel.js'
 
 //@desc Create a user
 //@route POST /api/users
@@ -32,4 +33,35 @@ const createUser = asyncHandler(async (req, res) => {
     
 })
 
-export { createUser }
+// const updateTaskFollowing = asyncHandler(async (req, res) => {
+//     const task = await Task.findById(req.params.id)
+    
+//     if (task) {
+
+//         const alreadyFollowing = task.followers.find(f.user._id)
+//     }
+// })
+
+const completedTasks = asyncHandler(async (req, res) => {
+    const task = await Task.find({complete: true, user: req.params.id})
+
+    if (task) {
+        res.json(task)
+    } else {
+        res.status(400)
+        throw new Error('No completed tasks')
+    }
+})
+
+const incompleteTasks = asyncHandler(async (req, res) => {
+    const task = await Task.find({complete: false, user: req.params.id})
+
+    if (task) {
+        res.json(task)
+    } else {
+        res.status(400)
+        throw new Error('All tasks complete')
+    }
+})
+
+export { createUser, completedTasks, incompleteTasks }
