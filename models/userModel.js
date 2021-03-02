@@ -13,19 +13,19 @@ const userSchema = mongoose.Schema({
 
     tasks: [
         {
-            task: {
+            
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Task'
-            }
+            
         }
     ],
 
     following: [
         {
-            task: {
+            
                 type: mongoose.Schema.Types.ObjectId,
                 ref: 'Task'
-            }
+            
         }
     ]
 

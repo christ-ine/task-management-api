@@ -1,9 +1,19 @@
 import mongoose from 'mongoose'
 
 const taskSchema = mongoose.Schema({
-    title: {type: String, required: true},
-    content: {type: String, required: true},
-    complete: { type: Boolean, required: true, default: false},
+    title: {
+        type: String, 
+        required: true
+    },
+    content: {
+        type: String, 
+        required: true
+    },
+    complete: { 
+        type: Boolean, 
+        required: true, 
+        default: false
+    },
     user: {
         type: mongoose.Schema.Types.ObjectId,
         required: true,
