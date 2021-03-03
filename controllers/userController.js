@@ -11,7 +11,7 @@ const createUser = asyncHandler(async (req, res) => {
 
     if(userExists){
         res.status(400)
-        throw new Error('User already esists')
+        throw new Error('Username is taken')
     }
 
     const user = await User.create({
@@ -79,7 +79,7 @@ const followingList = asyncHandler(async(req, res) => {
             res.status(201).json({message: 'Not following any tasks}'})
         }
 
-        res.json(user.following)
+        res.status(201).json(user.following)
     } else {
         res.status(404)
         throw new Error('User not found')
@@ -92,7 +92,7 @@ const completedTasks = asyncHandler(async (req, res) => {
     const task = await Task.find({complete: true, user: req.params.id})
 
     if (task) {
-        res.json(task)
+        res.status(201).json(task)
     } else {
         res.status(400)
         throw new Error('No completed tasks')
@@ -105,7 +105,7 @@ const incompleteTasks = asyncHandler(async (req, res) => {
     const task = await Task.find({complete: false, user: req.params.id})
 
     if (task) {
-        res.json(task)
+        res.status(201).json(task)
     } else {
         res.status(400)
         throw new Error('All tasks complete')

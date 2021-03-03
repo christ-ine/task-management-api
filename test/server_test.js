@@ -5,7 +5,7 @@ const expect = chai.expect
 const baseUrl = "http://localhost:5000"
 chai.use(chaiHttp);
 
-describe("First Test", function(){
+describe("Server Test", function(){
 it('server is live', function(done) {
         chai.request(baseUrl)
         .get('/')
