@@ -21,7 +21,7 @@
     POST    /api/tasks/                          Create a new task (req.body must include user ID)
     PUT     /api/tasks/{task_id}                 Edit task title and/or content by task ID
     PUT     /api/tasks/{task_id}/status          Mark tasks complete or incomplete by task ID
-    DELETE     /api/tasks/{task_id}              Delete task by task ID
+    DELETE  /api/tasks/{task_id}              Delete task by task ID
     
 ```
 
