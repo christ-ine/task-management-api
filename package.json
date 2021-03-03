@@ -5,7 +5,7 @@
   "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -18,10 +18,13 @@
   },
   "homepage": "https://github.com/christ-ine/task-management-api#readme",
   "dependencies": {
+    "chai": "^4.3.1",
+    "chai-http": "^4.3.0",
     "colors": "^1.4.0",
     "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "mocha": "^8.3.0",
     "mongoose": "^5.11.18",
     "morgan": "^1.10.0",
     "nodemon": "^2.0.7",
